@@ -1,0 +1,30 @@
+{
+  "artist": null,
+  "category": [
+    "enterprise"
+  ],
+  "created_at": "2022-01-13T00:32:12Z",
+  "creator": "MaxWhere Solutions Zrt.",
+  "description": "Virtual Operations Center (VOC) Builder application.",
+  "domain": null,
+  "is_available_web": false,
+  "is_favorite": true,
+  "is_public": true,
+  "is_sandbox": false,
+  "magic_link": "https://www.maxwhere.com/cp/where/7a5ce878-efed-4376-bc4d-41bc0050257f",
+  "magic_link_web": "https://portal.maxwhere.com/mwweb/url.html#7a5ce878-efed-4376-bc4d-41bc0050257f",
+  "min_req_client_version": "3.0.0",
+  "name": "Virtual Operation Center (VOC) Builder",
+  "permission_id": 4,
+  "status": "active",
+  "subtitle": "Virtual Operations Center (VOC) Builder application.",
+  "thumbnail": {},
+  "uuid": "7a5ce878-efed-4376-bc4d-41bc0050257f",
+  "version": 4,
+  "id": "7a5ce878-efed-4376-bc4d-41bc0050257f",
+  "title": "Virtual Operation Center (VOC) Builder",
+  "tag": null,
+  "updated_at": "2022-11-09T10:11:32Z",
+  "affiliations": null,
+  "localThumbName": "7a5ce878-efed-4376-bc4d-41bc0050257f-thumb"
+}

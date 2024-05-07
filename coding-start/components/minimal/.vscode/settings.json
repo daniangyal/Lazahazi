@@ -1,0 +1,25 @@
+{
+  "editor.suggestSelection": "first",
+  "vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+
+  "editor.formatOnSave": true,
+  "prettier.singleQuote": true,
+  "prettier.trailingComma": "all",
+  "debug.javascript.terminalOptions": {
+    "stopOnEntry": true
+  },
+  "editor.mouseWheelZoom": true,
+  "material-icon-theme.folders.associations": {
+    "customFolderName": "src",
+    "sample": "dist"
+  },
+
+  "vetur.validation.templateProps": true,
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

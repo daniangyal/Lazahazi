@@ -1,0 +1,33 @@
+{
+  "name": "ts-example",
+  "version": "1.0.0",
+  "description": "ts-example",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "watch-ts": "tsc -w",
+    "watch-static": "node watchStaticAssets.js",
+    "watch": "concurrently \"npm run watch-ts\" \"npm run watch-static\"",
+    "copy-static-assets": "node copyStaticAssets.js",
+    "mwbuild": "npm run build & npm run copy-static-assets"
+  },
+  "author": "Norbert Rajos",
+  "license": "ISC",
+  "dependencies": {
+    "@mxw/next": "^1.5.1",
+    "@mxw/three": "^1.0.3",
+    "@mxw/three-utils": "^1.0.2",
+    "mqtt": "^5.5.0",
+    "path": "^0.12.7",
+    "three-csg-ts": "^3.1.10"
+  },
+  "devDependencies": {
+    "@mxw/types": "^1.0.16",
+    "@types/lodash": "^4.14.182",
+    "@types/node": "^16.10.3",
+    "chokidar": "^3.5.1",
+    "concurrently": "^6.1.0",
+    "fs-extra": "^10.0.0",
+    "typescript": "^4.1.3"
+  }
+}

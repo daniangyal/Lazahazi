@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+
+  </head>
+
+  <body>
+    <div class="container" style="padding-top: 10px;">
+
+        <button
+          type="button"
+          class=" m-2 btn-lg btn-gray"
+          style="width: 120px;"
+          onclick="start()"
+        >
+          START</button
+        >
+    </div>
+
+    <script>
+      const { ipcRenderer } = require("electron");
+      const sendIpcMsg = (msg) => {
+        ipcRenderer.send("compdev-tutorial-wom-manipulation", msg);
+      };
+
+      ipcRenderer.on('ipc-tree', (event, obj) => {
+        console.log(obj);
+        document.getElementById("myspan").innerHTML=obj;
+      });
+
+
+      const start = () => {
+        sendIpcMsg({ cmd: "start" });
+      };
+
+    </script>
+  </body>
+</html>
