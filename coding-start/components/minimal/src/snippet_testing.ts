@@ -187,11 +187,11 @@ declare ballstartpos:
 
           RollingMeansHistory.push(RollingMeans);
 
-          if ((RollingMeans.rollingMean50 != 0) &&
+          if ((RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean50 != 0) &&
           (RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean6 > 2 * RollingMeans.rollingMean6) &&
           (RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean6 > 2 * RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean50) &&
           (RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean6 > 25)) {
-          signal = 1;
+            signal = 1;
           }
 
           if(AccelerationHistory.length ==51) AccelerationHistory.shift();
