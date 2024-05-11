@@ -133,39 +133,24 @@ declare ballstartpos:
       //   {console.log("Subscribe to PublishSwitch fail")}
       // })
     })
-    let Acceleration={
-      x:  0.0,
-      y:  0.0,
-      z:  0.0
-    }
-    let Velocity={
-      x: 0.0,
-      y:  0.0,
-      z:  0.0
-    }
-    let prevVelocity={
-      x: 0.0,
-      y:  0.0,
-      z:  0.0
-    }
-    let prevAcceleration={
-      x: 0.0,
-      y:  0.0,
-      z:  0.0
-    }
-    let Position={
-      x: 0.0,
-      y: 0.0,
-      z: 0.0
-    }
-    let prevPosition={
-      x: 0.0,
-      y: 0.0,
-      z: 0.0
-    }
+    let signal = 0;
+    let Acceleration = {x:0,y:0,z:0};
+    let AccelerationHistory = [];
+    let PythagoreanResult = 0;
+    let PythagoreanResultHistory = [];
+    let RollingMeans = {rollingMean6: 0, rollingMean50: 0,};
+    let RollingMeansHistory = [];
     let d:1.0;
     let game=false;
     // MQTT üzenet fogadása
+    function calculateMean(array: number[], n: number) {
+      let sum = 0;
+      for (let i = Math.max(0, array.length - n); i < array.length; i++) {
+        sum += array[i];
+      }
+      return sum / Math.min(n, array.length);
+    }
+    
     client.on('message', function (topic, message) {
       // Inicializálás
       // console.log('mqtt uzenet: '+message.toString());
@@ -177,59 +162,43 @@ declare ballstartpos:
       //       game=!game;
       //   console.log('Game state: ' +game.toString());}
       // if(game && message.toString()!="Switch"){
-      if(true){
-      let Accelerationjason = JSON.parse(message.toString())
-      Acceleration.x= parseFloat(Accelerationjason.x);
-      Acceleration.y= parseFloat(Accelerationjason.y);
-      Acceleration.z= parseFloat(Accelerationjason.z);
-      if(isNaN(Acceleration.x))
-          console.log('x NaN')
-          // Acceleration.x=0;}
-      if(isNaN(Acceleration.y))
-        console.log('y NaN')
-        // Acceleration.y=0;
-      if(isNaN(Acceleration.z))
-        console.log('x NaN')
-        // Acceleration.z=0;
-      console.log('accx: '+Acceleration.x+' tipus: '+typeof(Acceleration.x));
-      // velocity
-      Velocity.x= prevVelocity.x+(prevAcceleration.x+Acceleration.x)/2*d;
-      Velocity.y= prevVelocity.y+(prevAcceleration.y+Acceleration.y)/2*d;
-      Velocity.z= prevVelocity.z+(prevAcceleration.z+Acceleration.z)/2*d;
-      if(isNaN(Velocity.x))
-        console.log('Velocity: x NaN')
-      if(isNaN(Velocity.y))
-        console.log('Velocity: y NaN')
-      if(isNaN(Velocity.z))
-        console.log('Velocity: z NaN')
-      console.log('velx: ' +Velocity.x+' tipus: '+typeof(Velocity.x));
-      //position
-      Position.x=prevPosition.x+(prevVelocity.x+Velocity.x)/2*d;
-      Position.y=prevPosition.y+(prevVelocity.x+Velocity.y)/2*d;
-      Position.z=prevPosition.z+(prevVelocity.x+Velocity.z)/2*d;
-      if(isNaN(Position.x))
-        console.log('Velocity: x NaN')
-      if(isNaN(Position.y))
-        console.log('Velocity: y NaN')
-      if(isNaN(Position.z))
-        console.log('Velocity: z NaN')
-      console.log('posx: '+Position.x+' tipus: '+typeof(Position.x));
+        if(true){
+          // Store acceleration data
 
-      labda.setPosition(Position.x,Position.y,Position.z, 'relative');
+          let Accelerationjason = JSON.parse(message.toString())
+          Acceleration = {
+            x: parseFloat(Accelerationjason.x),
+            y: parseFloat(Accelerationjason.y),
+            z: parseFloat(Accelerationjason.z),
+          };
+          AccelerationHistory.push(Acceleration);
+
+          // Calculate and store the Pythagorean result
+
+          PythagoreanResult = Math.sqrt(Math.pow(Acceleration.x, 2) + Math.pow(Acceleration.y, 2) + Math.pow(Acceleration.z, 2));
+          PythagoreanResultHistory.push(PythagoreanResult);
+
+          // Calculate and store the rolling means for the last 6 and 50 data
+          
+          if (PythagoreanResultHistory.length == 7) RollingMeans.rollingMean6 = calculateMean(PythagoreanResultHistory, 6);
+          else RollingMeans.rollingMean6 = 0;
+          if (PythagoreanResultHistory.length == 51) RollingMeans.rollingMean50 = calculateMean(PythagoreanResultHistory, 50);   
+          else RollingMeans.rollingMean50 = 0;
+
+          RollingMeansHistory.push(RollingMeans);
+
+          if ((RollingMeans.rollingMean50 != 0) &&
+          (RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean6 > 2 * RollingMeans.rollingMean6) &&
+          (RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean6 > 2 * RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean50) &&
+          (RollingMeansHistory[RollingMeansHistory.length - 5].rollingMean6 > 25)) {
+          signal = 1;
+          }
+
+          if(AccelerationHistory.length ==51) AccelerationHistory.shift();
+          if(PythagoreanResultHistory.length == 51) PythagoreanResultHistory.shift();
+          if(RollingMeansHistory.length == 51) RollingMeansHistory.shift();
       // labda.setPosition(Acceleration.x,Acceleration.y,Acceleration.z, 'relative');
-
-
-      prevAcceleration=Acceleration;
-      prevVelocity=Velocity;
-      }
-      else{
-        Position={x:0,y:0,z:0};
-        prevPosition={x:0,y:0,z:0};
-        Velocity={x:0,y:0,z:0};
-        prevVelocity={x:0,y:0,z:0};
-        Acceleration={x:0,y:0,z:0};
-        prevAcceleration={x:0,y:0,z:0};
-      }
+        }
 
       // if(message.toString() == "jump"){
       //   penguin.setPosition(0, -100, 0, 'relative');
