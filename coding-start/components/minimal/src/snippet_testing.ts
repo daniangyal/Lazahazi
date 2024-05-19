@@ -62,6 +62,7 @@ let target= wom.create('mesh', {
   return target;
 }
 
+
 // async _Createball(id?: string, posi: Vector3 ={ x: 0, y:0, z:200}){
 //   let target= wom.create('mesh', {
 //       id: id,
@@ -105,27 +106,42 @@ declare ballstartpos:
 }
   async _MQTT(id?: string) {
     function impulzusfgv(proba:any, x2:any, y2:any, z2:any):void{
-      console.log("Hello");
-      proba.applyLinearImpulse({ x: x2/10, y: y2/10, z: z2/10 });
+      console.log("Dobas...");
+            // labda.setCoeffs({gravity: {x: 0, y: -9.81, z: 0}});
+      // proba.physical:'link-type':'dynamic';
+      // console.log(proba.autophysical);
+      // proba.autophysical=true;
+      // console.log(proba.autophysical);
+      // proba.phyiscal['link-type'] = 'dynamic';
+      proba.applyLinearImpulse({ x: x2*0.65, y: y2*0.65, z: z2*0.65 });
     }
     let labda= wom.create('mesh', {
       url: 'Sphere.mesh',
-      scale: 10,
+      scale: 30,
       autophysical: true,
+      position: { x:-1200, y: 150, z: -2300 },
+      // position: { x: 0, y: 500, z: 2500 },
       physical: {
         'link-type': 'dynamic',
+
         coefficients: {
           gravity: {
               x: 0,
               y: -9.81,
-              z: 0,},
-          },
+              z: 0,
+            },
+          }
         },
       class: 'kurva, dynamic',
     });
-    labda.setPosition({x: 0, y: 500, z: 2500});
+    // labda.setPosition({x: 0, y: 500, z: 2500});
     await womAsync.render(labda);
-    labda.setPosition({x: 0, y: 500, z: 2500});
+    // labda.setPosition({x: 0, y: 500, z: 2500});
+    labda.on('click', (e) => {
+    labda.setPosition({x: 0, y: 1000, z: 2500});
+    console.log("click");
+    })
+    // labda.setPosition({x: 0, y: 500, z: 2500});
     console.log("MQTT...");
     const client  = mqtt.connect('wss://4e67ef57e7b74853ab48df4f2239cf2c.s1.eu.hivemq.cloud:8884/mqtt', {
       username: 'danika2',
@@ -191,7 +207,15 @@ declare ballstartpos:
     client.on('message', function (topic, message) {
       // Inicializálás
       console.log('mqtt uzenet: '+message.toString());
-      // if(message.toString()=="Switch")
+      if(message.toString()=="Switch")
+        {
+          console.log('Switch');
+          // labda.setPosition({x:-1200, y: 150, z: -2300});
+          
+          
+          // labda.getPosition().x;
+          throwsense=true;
+        }
       //     {
       //       // let Switchjason =JSON.parse(message.toString())
       //       // if(Switchjason.X=="Switch")
@@ -199,7 +223,7 @@ declare ballstartpos:
       //       game=!game;
       //   console.log('Game state: ' +game.toString());}
       // if(game && message.toString()!="Switch"){
-        if(throwsense){
+      else if(throwsense){
           // Store acceleration data
 
           let Accelerationjason = JSON.parse(message.toString())
@@ -249,6 +273,7 @@ declare ballstartpos:
             }
           console.log(signal.toString());
           if(signal==1){
+            // labda.setCoeffs({gravity: {x: 0, y: -9.81, z: 0}});
             impulzusfgv(labda, AccelerationHistory[AccelerationHistory.length-8].x, AccelerationHistory[AccelerationHistory.length-8].y, AccelerationHistory[AccelerationHistory.length-8].z);
             signal=0;
             throwsense=false;
@@ -257,6 +282,9 @@ declare ballstartpos:
             }
             console.log("utso x:"+Acceleration.x+"utso y:"+Acceleration.y+"utso z:"+Acceleration.z);
             console.log("dobas x:"+AccelerationHistory[AccelerationHistory.length-8].x+"dobas y:"+AccelerationHistory[AccelerationHistory.length-8].y+"dobas z:"+AccelerationHistory[AccelerationHistory.length-8].z);
+            AccelerationHistory=[];
+            PythagoreanResultHistory=[];
+            RollingMeansHistory=[];
           }
         }
         
@@ -300,7 +328,8 @@ declare ballstartpos:
 
 
   constructor(){
-    let target = this._Createtarget('target', { x: 0, y: 500, z: 0 });
+    let target = this._Createtarget('target', { x: -1200, y: 0, z: -4000 });
+    // let target = this._Createtarget('target', { x: 0, y: 500, z: 0 });
     this._setOrientation();
     // let labda=this._Createball('labda', { x: 0, y: 500, z: 2500 });
     // this._08MeshHierarchy();
